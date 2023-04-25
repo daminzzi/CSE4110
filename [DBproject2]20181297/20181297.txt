@@ -1,0 +1,395 @@
+create table manufacturer(
+	m_name varchar(20) primary key,
+	contact_num varchar(20));
+create table product(
+	product_id char(10) primary key,
+	m_name varchar(20),
+    foreign key(m_name) references manufacturer(m_name),
+    prd_name varchar(20),
+    prd_type varchar(20),
+    price int,
+    supply_price int);
+create table package(
+	package_id char(10),
+    foreign key(package_id) references product(product_id),
+	product_id char(10),
+    foreign key(product_id) references product(product_id),
+    quantity int,
+    primary key(package_id, product_id));
+create table store(
+	store_id char(5) primary key,
+    st_name varchar(20),
+	st_number varchar(20),
+    location varchar(20),
+    address varchar(30));
+create table inventory(
+	store_id char(5),
+    foreign key(store_id) references store(store_id),
+    product_id char(10),
+    foreign key(product_id) references product(product_id),
+    quantity int,
+    primary key(store_id, product_id));
+create table inventory_order(
+	store_id char(5),
+    foreign key(store_id) references store(store_id),
+    product_id char(10),
+    foreign key(product_id) references product(product_id),
+    o_date datetime,
+    quantity int,
+    price int,
+    arrival_status varchar(10),
+    primary key(store_id, product_id, o_date));
+create table customer(
+	customer_id char(7) primary key,
+	c_name varchar(20),
+    phone_num char(13),
+    address varchar(50));
+create table contract(
+	customer_id char(7) primary key,
+    foreign key(customer_id) references customer(customer_id),
+    account_num char(15),
+    payment_date int);
+create table non_contract(
+	customer_id char(7),
+    foreign key(customer_id) references customer(customer_id),
+    card_num char(19),
+    primary key(customer_id, card_num));
+create table order_list(
+	order_num char(12) primary key,
+	customer_id char(7),
+    foreign key(customer_id) references customer(customer_id),
+    o_date datetime,
+    payment_method varchar(15),
+    payment_status char(1));
+create table order_prd(
+	order_num char(12),
+    foreign key(order_num) references order_list(order_num),
+    product_id char(10),
+    foreign key(product_id) references product(product_id),
+    store_id char(5),
+    foreign key(store_id) references store(store_id),
+    quantity int,
+    price int,
+    primary key(order_num, product_id));
+create table online_order(
+	ord_num char(12),
+    foreign key(ord_num) references order_list(order_num),
+    product_id char(10),
+    foreign key(product_id) references product(product_id),
+    inv_comp varchar(20),
+    inv_num char(17),
+    address varchar(50),
+    delivery_status varchar(10),
+    primary key(ord_num, product_id, inv_num));
+
+insert into manufacturer values ("apple", "1-217-628-1056");
+insert into manufacturer values ("samsung", "1-272-200-5375");
+insert into manufacturer values ("lg", "1-823-321-6153");
+insert into manufacturer values ("msi", "1-849-122-8178");
+insert into manufacturer values ("asus", "1-382-352-3883");
+insert into manufacturer values ("hp", "1-641-957-2933");
+insert into manufacturer values ("hansung", "1-843-776-1454");
+insert into manufacturer values ("xiaomi", "1-413-639-4735");
+insert into manufacturer values ("acer", "1-874-356-2161");
+insert into manufacturer values ("lenovo", "1-851-764-5777");
+insert into manufacturer values ("dell", "1-632-138-4782");
+insert into manufacturer values ("microsoft", "1-827-670-7246");
+insert into manufacturer values ("gigabyte", "1-542-504-7676");
+insert into manufacturer values ("jooyon", "1-346-775-6264");
+insert into manufacturer values ("carrier", "1-262-857-4712");
+
+insert into product values ("aaaa000001", "apple", "studio display", "monitor", 1597, 999);
+insert into product values ("aaaa000002", "apple", "studio display NEO", "monitor", 1997, 1399);
+insert into product values ("aaaa000003", "apple", "magic keyboard", "accessory", 239, 149);
+insert into product values ("aaaa000004", "apple", "mac mini M1", "computer", 719, 549);
+insert into product values ("bbbb000001", "samsung", "galaxy tab S8", "tablet", 799, 459);
+insert into product values ("bbbb000002", "samsung", "galaxy book pro", "laptop", 2099, 659);
+insert into product values ("bbbb000003", "samsung", "wireless mouse", "accessory", 35, 20);
+insert into product values ("cccc000001", "lg", "gram 2022", "laptop", 1999, 658);
+insert into product values ("cccc000002", "lg", "whisen 2022", "aircondi", 1434, 978);
+insert into product values ("cccc000003", "lg", "oled evo", "tv", 4875, 3778);
+insert into product values ("JIKD383735", "msi", "gaming labtop", "laptop", 2045, 1019);
+insert into product values ("TRTG141695", "msi", "sword labtop", "laptop", 1845, 979);
+insert into product values ("MRXP326681", "asus", "zenbook 22", "laptop", 1999, 1020);
+insert into product values ("JSCL772930", "asus", "zenbook pro 22", "laptop", 2799, 1999);
+insert into product values ("BPBA478253", "asus", "vivobook", "laptop", 1599, 999);
+insert into product values ("CRGV993768", "samsung", "sd card 32GB", "accessory", 25, 10);
+insert into product values ("VWYG422647", "samsung", "sd card 64GB", "accessory", 30, 13);
+insert into product values ("WUDW201145", "carrier", "aircondi", "aircondi", 419, 255);
+insert into product values ("EKUT839995", "xiaomi", "portable battery", "accessory", 19, 10);
+insert into product values ("pppp000001", "samsung", "laptop+mouse", "package", 2059, 679);
+insert into product values ("pppp000002", "lg", "air+tv", "package", 6019, 4756);
+insert into product values ("pppp000003", "apple", "dis+kb+mini", "package", 2427, 1697);
+insert into product values ("pppp000004", "samsung", "sd card 32GB*10", "package", 220, 100);
+insert into product values ("pppp000005", "carrier", "aircondi*3", "package", 1157, 765);
+insert into product values ("pppp000006", NULL, "zen22+mouse+sd64", "package", 1960, 1053);
+insert into product values ("pppp000007", "xiaomi", "battery*5", "package", 90, 50);
+insert into product values ("pppp000008", "samsung", "laptop+mouse+sd64", "package", 2099, 69);
+
+insert into package values ("pppp000001", "bbbb000002", 1);
+insert into package values ("pppp000001", "bbbb000003", 1);
+insert into package values ("pppp000002", "cccc000002", 1);
+insert into package values ("pppp000002", "cccc000003", 1);
+insert into package values ("pppp000003", "aaaa000001", 1);
+insert into package values ("pppp000003", "aaaa000003", 1);
+insert into package values ("pppp000003", "aaaa000004", 1);
+insert into package values ("pppp000004", "CRGV993768", 10);
+insert into package values ("pppp000005", "WUDW201145", 3);
+insert into package values ("pppp000006", "MRXP326681", 1);
+insert into package values ("pppp000006", "bbbb000003", 1);
+insert into package values ("pppp000006", "VWYG422647", 1);
+insert into package values ("pppp000007", "EKUT839995", 5);
+insert into package values ("pppp000008", "bbbb000002", 1);
+insert into package values ("pppp000008", "bbbb000003", 1);
+insert into package values ("pppp000008", "VWYG422647", 1);
+
+insert into store values ("AN284", "Los Angeles", "1-112-511-3367", "California", "P.O. Box 247, 4843 Non St.");
+insert into store values ("DJ729", "San Diego", "1-597-811-3351", "California", "Ap #560-6442 Pede St.");
+insert into store values ("FC177", "New York", "1-435-304-1513", "New York", "P.O. Box 820, 241 Sit Rd.");
+insert into store values ("HT888", "Columbus", "1-148-488-1433", "Ohio", "760-9530 Eleifend St.");
+insert into store values ("KL676", "Cleveland", "1-820-422-7814", "Ohio", "112-9349 Amet, Av.");
+insert into store values ("LS493", "Honolulu", "1-288-186-4046", "Hawaii", "Ap #688-4532 Nec Ave");
+insert into store values ("NQ222", "Newark", "1-631-211-4274", "New Jersey", "2897 Dictum St.");
+insert into store values ("NR354", "Oakland", "1-354-453-6380", "California", "Ap #729-2499 Fermentum Ave");
+insert into store values ("OC782", "Buffalo", "1-532-417-2516", "New York", "P.O. Box 694, 6236 Ante. St.");
+insert into store values ("OI667", "Jersey", "1-432-723-3485", "New Jersey", "5578 Ut Avenue");
+insert into store values ("PX528", "Philadelphia", "1-777-227-5230", "Pennsylvania", "442-8640 Nulla Avenue");
+insert into store values ("PY278", "Riverside", "1-288-721-0570", "California", "989 Penatibus Road");
+insert into store values ("WM957", "Santa Fe", "1-287-223-7272", "New Mexico", "Ap #305-828 Magna. Av.");
+insert into store values ("XI614", "Seattle", "1-687-665-7266", "Washington", "250-2716 Magna. St.");
+insert into store values ("YR137", "Spokane", "1-451-277-6884", "Washington", "Ap #834-369 Condimentum. Rd.");
+
+insert into inventory values ("AN284", "aaaa000001", 5);
+insert into inventory values ("AN284", "bbbb000001", 3);
+insert into inventory values ("AN284", "bbbb000002", 4);
+insert into inventory values ("AN284", "bbbb000003", 5);
+insert into inventory values ("AN284", "cccc000001", 3);
+insert into inventory values ("AN284", "EKUT839995", 10);
+insert into inventory values ("AN284", "CRGV993768", 20);
+insert into inventory values ("FC177", "WUDW201145", 7);
+insert into inventory values ("FC177", "VWYG422647", 10);
+insert into inventory values ("FC177", "aaaa000001", 3);
+insert into inventory values ("FC177", "aaaa000003", 5);
+insert into inventory values ("FC177", "aaaa000004", 2);
+insert into inventory values ("FC177", "cccc000002", 3);
+insert into inventory values ("HT888", "cccc000002", 3);
+insert into inventory values ("HT888", "cccc000003", 2);
+insert into inventory values ("HT888", "JIKD383735", 3);
+insert into inventory values ("HT888", "MRXP326681", 3);
+insert into inventory values ("LS493", "bbbb000001", 4);
+insert into inventory values ("LS493", "bbbb000002", 2);
+
+insert into inventory_order values ("AN284", "aaaa000001", "2022-05-24 14:52", 2, 1998, "done");
+insert into inventory_order values ("AN284", "cccc000001", "2022-05-24 14:52", 2, 1316, "done");
+insert into inventory_order values ("AN284", "bbbb000003", "2022-05-24 14:52", 3, 60, "done");
+insert into inventory_order values ("LS493", "bbbb000001", "2022-05-26 10:27", 2, 1377, "done");
+insert into inventory_order values ("LS493", "bbbb000002", "2022-05-26 10:27", 2, 1318, "done");
+insert into inventory_order values ("FC177", "aaaa000001", "2022-05-28 4:41", 2, 1998, "done");
+insert into inventory_order values ("FC177", "aaaa000003", "2022-05-28 4:41", 3, 447, "done");
+insert into inventory_order values ("FC177", "aaaa000004", "2022-05-28 4:41", 2, 1098, "done");
+insert into inventory_order values ("OC782", "cccc000002", "2022-06-03 9:59", 3, 2934, "shipping");
+insert into inventory_order values ("OC782", "cccc000003", "2022-06-03 9:59", 2, 7556, "shipping");
+insert into inventory_order values ("PX528", "JIKD383735", "2022-06-03 10:02", 3, 3057, "shipping");
+insert into inventory_order values ("PX528", "JSCL772930", "2022-06-03 10:02", 3, 5997, "shipping");
+insert into inventory_order values ("PX528", "BPBA478253", "2022-06-03 10:02", 3, 2997, "shipping");
+insert into inventory_order values ("WM957", "JIKD383735", "2022-06-05 4:48", 3, 3057, "checking");
+insert into inventory_order values ("WM957", "TRTG141695", "2022-06-05 4:48", 3, 2937, "checking");
+
+insert into customer values ("QPC8388", "Shafira Arnold", "010-9187-1164", "8137 Sagittis St.");
+insert into customer values ("FXW9763", "Wynter Maxwell", "010-6996-4548", "P.O. Box 330, 7132 Augue Rd.");
+insert into customer values ("GHC5488", "Thomas Reed", "010-2574-0809", "638-1528 Tellus, Avenue");
+insert into customer values ("WUS4934", "Indira Head", "010-7867-1740", "P.O. Box 795, 3200 Rutrum Rd.");
+insert into customer values ("QSF9658", "Cruz Warner", "010-6940-3998", "Ap #580-5646 Ullamcorper Road");
+insert into customer values ("CUF3221", "Ignatius Huber", "010-6804-4618", "954-8864 Leo. St.");
+insert into customer values ("HIV7677", "Serina Bond", "010-9749-1859", "Ap #562-5357 Mi. Avenue");
+insert into customer values ("STW6414", "Rhonda Oliver", "010-6877-4335", "639-6009 Quis Rd.");
+insert into customer values ("MVD7235", "Kermit Ware", "010-2818-3659", "2995 Hendrerit Rd.");
+insert into customer values ("IEG2219", "Iris Cote", "010-7142-3731", "378-2665 Posuere Ave");
+insert into customer values ("KWX7546", "Palmer Doyle", "010-5825-4278", "342-8831 Aliquam Rd.");
+insert into customer values ("ZYC3079", "Wyatt Miles", "010-7134-1417", "119 Ac, Rd.");
+insert into customer values ("UWK7673", "Owen Martin", "010-1507-1553", "265-9175 Eget Ave");
+insert into customer values ("FZK6858", "Raphael Edwards", "010-8458-6580", "446-2571 Pede Av.");
+insert into customer values ("YWJ5767", "Ivor Bradshaw", "010-7175-6386", "979-8445 Auctor, Ave");
+insert into customer values ("JJI8115", "Dora Mccall", "010-1466-9001", "Ap #384-5726 Orci. Av.");
+insert into customer values ("YJG3613", "Lars Houston", "010-2776-7177", "P.O. Box 588, 9141 Sodales Rd.");
+insert into customer values ("DGW4179", "Ulric Chase", "010-1620-2766", "Ap #257-5238 Lobortis Ave");
+insert into customer values ("GWQ8237", "Nero Delaney", "010-4537-2841", "Ap #731-7408 Phasellus Ave");
+insert into customer values ("VGQ6754", "Brittany Sargent", "010-0943-5131", "P.O. Box 138, 2661 Non Rd.");
+insert into customer values ("LCK1464", "Velma Richard", "010-7140-1670", "777-4115 Faucibus Road");
+insert into customer values ("GPV6183", "Aquila Phelps", "010-3037-0382", "396-2244 Felis St.");
+insert into customer values ("BEX3523", "Nevada Ross", "010-0782-7661", "Ap #776-8761 Facilisis Rd.");
+insert into customer values ("SMI3896", "Nicole Glenn", "010-0677-7283", "7107 Porttitor Rd.");
+insert into customer values ("SCH2540", "Sigourney Peters", "010-9634-6444", "7856 Ultrices, Road");
+insert into customer values ("VQX4410", "Kato May", "010-3161-7371", "682-1077 A, Road");
+insert into customer values ("CKO2551", "Ruby Alvarado", "010-3606-8927", "470-7813 Faucibus Road");
+insert into customer values ("MWS9767", "Jocelyn Kirkland", "010-1657-4914", "5521 Elit. Street");
+insert into customer values ("PFE7376", "Hu Shepard", "010-4371-5762", "936-1951 Porttitor St.");
+insert into customer values ("NQL0662", "Joshua Gilmore", "010-6075-4262", "1760 Tempor, St.");
+insert into customer values ("MHT0244", "Jonas Ortega", "010-3770-0788", "Ap #832-3346 Aliquam Road");
+insert into customer values ("MAD2281", "Martina Cohen", "010-3329-6141", "Ap #383-2043 Nec Road");
+insert into customer values ("TVQ4573", "Elliott Blake", "010-1957-7441", "P.O. Box 298, 4723 Fringilla Rd.");
+insert into customer values ("PJW9524", "Hiram Neal", "010-7234-8624", "925-2890 Fringilla Rd.");
+insert into customer values ("QXR5962", "Winifred West", "010-7314-8047", "Ap #415-3276 Pede. Stree");
+
+insert into contract values ("QPC8388", "3464-158-571347", 8);
+insert into contract values ("FXW9763", "1734-444-598413", 23);
+insert into contract values ("GHC5488", "7181-827-553432", 12);
+insert into contract values ("WUS4934", "1343-958-762239", 20);
+insert into contract values ("QSF9658", "9971-788-212950", 25);
+insert into contract values ("CUF3221", "1425-376-577235", 8);
+insert into contract values ("HIV7677", "6370-936-856712", 10);
+insert into contract values ("STW6414", "3894-310-984884", 5);
+insert into contract values ("MVD7235", "3660-618-072811", 12);
+insert into contract values ("IEG2219", "2259-338-339772", 8);
+insert into contract values ("KWX7546", "8061-608-376645", 17);
+insert into contract values ("ZYC3079", "4923-738-038370", 23);
+insert into contract values ("UWK7673", "4314-693-677574", 18);
+insert into contract values ("FZK6858", "9262-996-186366", 12);
+insert into contract values ("YWJ5767", "5666-597-208842", 10);
+
+insert into non_contract values ("JJI8115", "4696-2043-4856-1237");
+insert into non_contract values ("YJG3613", "2580-6317-4786-8526");
+insert into non_contract values ("DGW4179", "2321-8451-0736-9822");
+insert into non_contract values ("GWQ8237", "7856-4232-5260-6542");
+insert into non_contract values ("VGQ6754", "2336-6678-2274-7451");
+insert into non_contract values ("LCK1464", "6549-4212-0201-1858");
+insert into non_contract values ("GPV6183", "4922-7577-6551-7081");
+insert into non_contract values ("BEX3523", "7432-5606-1417-1332");
+insert into non_contract values ("SMI3896", "6624-9424-1840-5173");
+insert into non_contract values ("SCH2540", "0523-4766-2677-9435");
+insert into non_contract values ("VQX4410", "1399-2191-5463-4030");
+insert into non_contract values ("CKO2551", "5707-0879-7612-0732");
+insert into non_contract values ("MWS9767", "4473-6817-6454-5611");
+insert into non_contract values ("PFE7376", "3347-2637-7735-6558");
+insert into non_contract values ("NQL0662", "2441-6826-5737-7687");
+
+insert into order_list values ("220052515824 ", "CUF3221", "2021-05-04 18:31", "account", "o");
+insert into order_list values ("220063688686 ", "YWJ5767", "2021-05-12 23:50", "account", "o");
+insert into order_list values ("220136163807 ", "KWX7546", "2021-05-28 7:36", "account", "o");
+insert into order_list values ("220138426878 ", "LCK1464", "2021-06-25 23:59", "credit_card", "o");
+insert into order_list values ("220277463894 ", "HIV7677", "2021-07-25 17:15", "account", "o");
+insert into order_list values ("220342242943 ", "TVQ4573", "2021-07-29 13:25", "cash", "o");
+insert into order_list values ("220353362867 ", "IEG2219", "2021-09-01 10:00", "account", "o");
+insert into order_list values ("220397810730 ", "QPC8388", "2021-09-15 4:21", "account", "o");
+insert into order_list values ("220447821032 ", "FXW9763", "2021-09-23 22:37", "account", "o");
+insert into order_list values ("220574785675 ", "GHC5488", "2021-10-10 14:34", "account", "o");
+insert into order_list values ("220581662803 ", "WUS4934", "2021-10-15 0:00", "account", "o");
+insert into order_list values ("220643758270 ", "VGQ6754", "2021-11-13 23:54", "credit_card", "o");
+insert into order_list values ("220645385477 ", "YWJ5767", "2021-11-23 22:50", "account", "o");
+insert into order_list values ("220667653147 ", "QXR5962", "2021-11-26 6:49", "credit_card", "o");
+insert into order_list values ("220737046727 ", "LCK1464", "2022-01-05 17:20", "credit_card", "o");
+insert into order_list values ("220807227802 ", "QPC8388", "2022-01-22 0:12", "account", "o");
+insert into order_list values ("220891212330 ", "IEG2219", "2022-02-09 23:05", "account", "o");
+insert into order_list values ("220896817642 ", "GPV6183", "2022-03-07 7:26", "credit_card", "o");
+insert into order_list values ("221315750424 ", "MAD2281", "2022-03-15 17:38", "cash", "o");
+insert into order_list values ("221512985844 ", "PJW9524", "2022-03-15 18:13", "cash", "o");
+insert into order_list values ("221551277527 ", "WUS4934", "2022-03-23 8:53", "account", "o");
+insert into order_list values ("222299744736 ", "VQX4410", "2022-03-25 14:02", "credit_card", "o");
+insert into order_list values ("223722165723 ", "CUF3221", "2022-03-25 19:21", "account", "o");
+insert into order_list values ("225179126184 ", "CKO2551", "2022-04-25 16:03", "credit_card", "o");
+insert into order_list values ("225256699248 ", "CKO2551", "2022-05-02 3:14", "credit_card", "o");
+insert into order_list values ("225699175125 ", "MVD7235", "2022-05-06 17:01", "account", "x");
+insert into order_list values ("226664023602 ", "QSF9658", "2022-05-07 16:23", "account", "x");
+insert into order_list values ("226938327445 ", "HIV7677", "2022-05-17 12:03", "account", "x");
+insert into order_list values ("227605367057 ", "SMI3896", "2022-06-03 11:27", "credit_card", "o");
+insert into order_list values ("228189736858 ", "IEG2219", "2022-06-03 21:51", "account", "x");
+
+insert into order_prd values ("220052515824 ", "aaaa000001", "NR354", 1, 1597);
+insert into order_prd values ("220052515824 ", "bbbb000001", "NR354", 1, 799);
+insert into order_prd values ("220052515824 ", "pppp000006", "NR354", 1, 1960);
+insert into order_prd values ("220063688686 ", "bbbb000002", "NR354", 1, 2099);
+insert into order_prd values ("220063688686 ", "bbbb000001", "NR354", 1, 799);
+insert into order_prd values ("220136163807 ", "bbbb000003", "WM957", 1, 35);
+insert into order_prd values ("220136163807 ", "aaaa000001", "WM957", 1, 1597);
+insert into order_prd values ("220138426878 ", "pppp000006", "PX528", 1, 1960);
+insert into order_prd values ("220138426878 ", "JIKD383735", "PX528", 1, 2045);
+insert into order_prd values ("220138426878 ", "aaaa000004", "PX528", 1, 719);
+insert into order_prd values ("220277463894 ", "cccc000001", "NR354", 1, 1999);
+insert into order_prd values ("220277463894 ", "bbbb000001", "NR354", 1, 799);
+insert into order_prd values ("220277463894 ", "pppp000005", "NR354", 1, 1157);
+insert into order_prd values ("220342242943 ", "bbbb000003", "KL676", 1, 35);
+insert into order_prd values ("220342242943 ", "cccc000001", "KL676", 1, 1999);
+insert into order_prd values ("220353362867 ", "aaaa000001", "XI614", 1, 1597);
+insert into order_prd values ("220353362867 ", "CRGV993768", "XI614", 1, 25);
+insert into order_prd values ("220353362867 ", "pppp000001", "XI614", 1, 2059);
+insert into order_prd values ("220397810730 ", "cccc000001", "OI667", 1, 1999);
+insert into order_prd values ("220397810730 ", "WUDW201145", "OI667", 1, 419);
+insert into order_prd values ("220397810730 ", "aaaa000001", "OI667", 1, 1597);
+insert into order_prd values ("220447821032 ", "pppp000001", "AN284", 1, 2059);
+insert into order_prd values ("220447821032 ", "VWYG422647", "AN284", 1, 30);
+insert into order_prd values ("220574785675 ", "pppp000005", "NR354", 1, 1157);
+insert into order_prd values ("220581662803 ", "pppp000006", "XI614", 1, 1960);
+insert into order_prd values ("220581662803 ", "bbbb000001", "XI614", 1, 799);
+insert into order_prd values ("220581662803 ", "pppp000005", "XI614", 1, 1157);
+insert into order_prd values ("220643758270 ", "pppp000007", "AN284", 1, 90);
+insert into order_prd values ("220645385477 ", "cccc000001", "XI614", 1, 1999);
+insert into order_prd values ("220645385477 ", "EKUT839995", "XI614", 1, 19);
+insert into order_prd values ("220667653147 ", "pppp000005", "FC177", 1, 1157);
+insert into order_prd values ("220667653147 ", "CRGV993768", "FC177", 1, 25);
+insert into order_prd values ("220667653147 ", "pppp000007", "FC177", 1, 90);
+insert into order_prd values ("220737046727 ", "pppp000002", "YR137", 1, 6019);
+insert into order_prd values ("220737046727 ", "bbbb000001", "YR137", 1, 799);
+insert into order_prd values ("220807227802 ", "pppp000008", "FC177", 1, 2099);
+insert into order_prd values ("220807227802 ", "JSCL772930", "FC177", 1, 2799);
+insert into order_prd values ("220891212330 ", "JIKD383735", "NQ222", 1, 2045);
+insert into order_prd values ("220891212330 ", "VWYG422647", "NQ222", 1, 30);
+insert into order_prd values ("220896817642 ", "pppp000002", "FC177", 1, 6019);
+insert into order_prd values ("220896817642 ", "EKUT839995", "FC177", 1, 19);
+insert into order_prd values ("220896817642 ", "bbbb000001", "FC177", 1, 799);
+insert into order_prd values ("221315750424 ", "JIKD383735", "LS493", 1, 2045);
+insert into order_prd values ("221512985844 ", "pppp000002", "KL676", 1, 6019);
+insert into order_prd values ("221512985844 ", "cccc000001", "KL676", 1, 1999);
+insert into order_prd values ("221512985844 ", "JIKD383735", "KL676", 1, 2045);
+insert into order_prd values ("221551277527 ", "JSCL772930", "AN284", 1, 2799);
+insert into order_prd values ("221551277527 ", "VWYG422647", "AN284", 1, 30);
+insert into order_prd values ("221551277527 ", "WUDW201145", "AN284", 1, 419);
+insert into order_prd values ("222299744736 ", "bbbb000003", "XI614", 1, 35);
+insert into order_prd values ("223722165723 ", "JIKD383735", "AN284", 1, 2045);
+insert into order_prd values ("225179126184 ", "JIKD383735", "PX528", 1, 2045);
+insert into order_prd values ("225179126184 ", "bbbb000001", "PX528", 1, 799);
+insert into order_prd values ("225179126184 ", "JSCL772930", "PX528", 1, 2799);
+insert into order_prd values ("225256699248 ", "pppp000008", "OI667", 1, 2099);
+insert into order_prd values ("225256699248 ", "JSCL772930", "OI667", 1, 2799);
+insert into order_prd values ("225256699248 ", "bbbb000001", "OI667", 1, 799);
+insert into order_prd values ("225699175125 ", "EKUT839995", "HT888", 1, 19);
+insert into order_prd values ("225699175125 ", "JSCL772930", "HT888", 1, 2799);
+insert into order_prd values ("225699175125 ", "cccc000001", "HT888", 1, 1999);
+insert into order_prd values ("226664023602 ", "pppp000008", "AN284", 1, 2099);
+insert into order_prd values ("226938327445 ", "aaaa000003", "PX528", 1, 239);
+insert into order_prd values ("227605367057 ", "bbbb000001", "LS493", 1, 799);
+insert into order_prd values ("227605367057 ", "pppp000002", "LS493", 1, 6019);
+insert into order_prd values ("227605367057 ", "pppp000005", "LS493", 1, 1157);
+insert into order_prd values ("228189736858 ", "aaaa000003", "HT888", 1, 239);
+insert into order_prd values ("228189736858 ", "aaaa000004", "HT888", 1, 719);
+insert into order_prd values ("228189736858 ", "VWYG422647", "HT888", 1, 30);
+
+insert into online_order values ("220138426878 ", "pppp000006", "USPS", "3626-6758-4340507", "910-3719 Ut Street", "done");
+insert into online_order values ("220138426878 ", "JIKD383735", "USPS", "3626-6758-4340507", "318-4248 Sed St.", "done");
+insert into online_order values ("220138426878 ", "aaaa000004", "USPS", "8435-1713-6618796", "Ap #774-5723 Penatibus Road", "done");
+insert into online_order values ("220643758270 ", "pppp000007", "USPS", "2712-5258-4788332", "527-454 Penatibus St.", "done");
+insert into online_order values ("220667653147 ", "pppp000005", "USPS", "5777-6416-7511149", "786-8897 Nec, Avenue", "done");
+insert into online_order values ("220667653147 ", "CRGV993768", "USPS", "7156-5251-5943886", "886-2039 At, Ave", "done");
+insert into online_order values ("220667653147 ", "pppp000007", "USPS", "7886-2018-8673042", "8721 Habitant Av.", "done");
+insert into online_order values ("220737046727 ", "pppp000002", "USPS", "1267-8867-2227987", "127-6345 Varius St.", "done");
+insert into online_order values ("220737046727 ", "bbbb000001", "USPS", "7433-1313-4916148", "801-6585 Lacinia. Street", "done");
+insert into online_order values ("222299744736 ", "bbbb000003", "USPS", "7527-2165-8940162", "608-5988 Litora St.", "done");
+insert into online_order values ("225256699248 ", "pppp000008", "USPS", "7814-9004-5016436", "Ap #254-3860 Tellus Rd.", "done");
+insert into online_order values ("225256699248 ", "JSCL772930", "USPS", "9375-8727-1163137", "P.O. Box 736, 8316 Ornare, St.", "done");
+insert into online_order values ("225256699248 ", "bbbb000001", "USPS", "9375-8727-1163137", "P.O. Box 736, 8316 Ornare, St.", "done");
+insert into online_order values ("227605367057 ", "bbbb000001", "USPS", "7678-6452-6168568", "526-7957 Adipiscing St.", "checking");
+insert into online_order values ("227605367057 ", "pppp000002", "USPS", "5467-1531-9457171", "P.O. Box 135, 941 Egestas Avenue", "checking");
+insert into online_order values ("227605367057 ", "pppp000005", "USPS", "2522-3766-0265874", "P.O. Box 977, 3113 Phasellus Avenue", "checking");
+
+drop table;
+drop table online_order;
+drop table order_prd;
+drop table order_list;
+drop table non_contract;
+drop table contract;
+drop table customer;
+drop table inventory_order;
+drop table inventory;
+drop table store;
+drop table package;
+drop table product;
+drop table manufacturer;
